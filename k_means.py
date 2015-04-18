@@ -52,7 +52,7 @@ def find_centers(X, K):
         clusters = cluster_points(X, mu)
 
         # Show
-        shower(clusters, mu, fig)
+        shower(clusters, mu, fig, iter_count)
 
         # Reevaluate centers
         mu = reevaluate_centers(clusters)
@@ -80,7 +80,7 @@ def init_plane_gauss(N, K):
     X = np.array(X)[:N]
     return X
 
-def shower(clusters, mu, fig):
+def shower(clusters, mu, fig, iter_count):
 
     # K should be less than 7
     n = len(clusters.keys())
@@ -100,12 +100,13 @@ def shower(clusters, mu, fig):
             ax.plot(x[0], x[1], color=c, marker="*", markersize=6)
 
     fig.show()
+    plt.savefig("k-means-%d.png"%iter_count)
     plt.pause(0.5)
 
 
 
 if __name__ == "__main__":
-    N = 500
+    N = 200
     X = init_plane(N)
     K = 7
     mu, clusters = find_centers(X, K)
