@@ -119,18 +119,20 @@ def lbg(X, M, show = False):
 
     iter_count = [0]
     while k < M:
+        #print "Iteration begin: ", len(mu)
         seperated_mu = copy.deepcopy(mu)
 
         if  2*k < M:
             k = 2 * k
             for i in mu:
                 seperated_mu.append(_increase(copy.deepcopy(i), dist))
-            #print seperated_mu, k
+            #print "2k<M: ", len(seperated_mu), k
 
         else:
             for i in random.sample(range(len(mu)), M-k):
                 seperated_mu.append(_increase(copy.deepcopy(mu[i]), dist))
             k = M
+            #print "last iteration: ", len(seperated_mu), k
         mu, clusters = k_means(X, k, seperated_mu, show = show, fig = fig, iter_count=iter_count)
     #print seperated_mu, k
     return (mu, clusters)
@@ -160,7 +162,7 @@ def shower(clusters, mu, fig, iter_count):
         for x in clusters[i]:
             ax.plot(x[0], x[1], color=c, marker="*", markersize=6)
 
-    plt.savefig("lbg-%d.png"%iter_count)
+    #plt.savefig("lbg-%d.png"%iter_count)
     fig.show()
     plt.pause(0.1)
 
@@ -197,8 +199,11 @@ if __name__ == "__main__":
     K = 7
 
 
+    # Take note! Item count of "clusters" is not necessary to be equal to it of "mu". Cause not all class is of samples.
     #mu, clusters = k_means(X, K)
     #print mu
-    mu, clusters = lbg(X, K, show = True)
+
+    # Take note! Item count of "clusters" is not necessary to be equal to it of "mu". Cause not all class is of samples.
+    mu, clusters = lbg(X, K, show=True)
     print mu, K
 

@@ -39,12 +39,13 @@ def reevaluate_centers(clusters):
 def has_converged(mu, oldmu):
     return (set([tuple(a) for a in mu]) == set([tuple(a) for a in oldmu]))
 
-def find_centers(X, K):
+def find_centers(X, K, show=True):
     # Initialize to K random centers
     oldmu = random.sample(X, K)
     mu = random.sample(X, K)
     iter_count = 0
-    fig = plt.figure()
+    if show:
+        fig = plt.figure()
     while not has_converged(mu, oldmu):
         iter_count += 1
         oldmu = mu
@@ -52,7 +53,8 @@ def find_centers(X, K):
         clusters = cluster_points(X, mu)
 
         # Show
-        shower(clusters, mu, fig, iter_count)
+        if show:
+            shower(clusters, mu, fig, iter_count)
 
         # Reevaluate centers
         mu = reevaluate_centers(clusters)
@@ -109,6 +111,6 @@ if __name__ == "__main__":
     N = 200
     X = init_plane(N)
     K = 7
-    mu, clusters = find_centers(X, K)
+    mu, clusters = find_centers(X, K, show=True)
     print mu
 

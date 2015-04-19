@@ -24,7 +24,7 @@ import numpy as np
 # Train a VQ
 #~~~~~~~~~~~~~
 
-def vq_generator(dirname, M):
+def vq_generator(dirname, M, return_clusters = False):
 
     # Collect all MFCC vectors from each wave file from a voice_material collection
     # (To define as a dict is just a workaround to simulate nonlocal in python3.x).
@@ -47,7 +47,10 @@ def vq_generator(dirname, M):
     mu, clusters = lbg.lbg(feature_collection["feature"], M)
     print "Finish generate VQ."
 
-    return mu
+    if not return_clusters:
+        return mu
+    else:
+        return mu, clusters
 
 if __name__ == "__main__":
 
@@ -63,15 +66,19 @@ if __name__ == "__main__":
     ## Perform 7 LBG classification
     #mu, clusters = lbg.lbg(feature, 7)
 
-
     #~~~~~~~~~~~~~
-    # Real demo
+    # Real world demo
     #~~~~~~~~~~~~~
     from time import time
 
+    M = 128
     timer = time()
     # Train VQ
-    mu = vq_generator(dirname = "/home/magodo/code/voiceMaterial/word", M = 256)
+    mu, clusters = vq_generator(dirname = "/home/magodo/code/voiceMaterial/word", M = M, return_clusters=True)
+    # Store the trained VQ(tuple of mu(list of 256 different vectors) and clusters(dict of 256 different vector sets))
+    import pickle
+    with open("VQ.pkl"+"-%d"%M, "wb") as f:
+        pickle.dump((mu,clusters), f)
 
     train_time = (time() - timer) / 60.0
     print "Used %f minutes" % train_time
