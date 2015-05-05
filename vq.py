@@ -71,17 +71,19 @@ if __name__ == "__main__":
     #~~~~~~~~~~~~~
     from time import time
 
-    M = 128
-    timer = time()
-    # Train VQ
-    mu, clusters = vq_generator(dirname = "/home/magodo/code/voiceMaterial/word", M = M, return_clusters=True)
-    # Store the trained VQ(tuple of mu(list of 256 different vectors) and clusters(dict of 256 different vector sets))
-    import pickle
-    with open("VQ.pkl"+"-%d"%M, "wb") as f:
-        pickle.dump((mu,clusters), f)
+    M_set = [64, 128, 256]
+    for M in M_set:
+        print "Generating VQ with M == %d"%M
+        timer = time()
+        # Train VQ
+        mu, clusters = vq_generator(dirname = "/home/magodo/code/voiceMaterial/word", M = M, return_clusters=True)
+        # Store the trained VQ(tuple of mu(list of 256 different vectors) and clusters(dict of 256 different vector sets))
+        import pickle
+        with open("VQ.pkl"+"-%d"%M, "wb") as f:
+            pickle.dump((mu,clusters), f)
 
-    train_time = (time() - timer) / 60.0
-    print "Used %f minutes" % train_time
+        train_time = (time() - timer) / 60.0
+        print "Used %f minutes" % train_time
 
 
     # Perform the trained VQ to a demo.wav
